@@ -5,14 +5,18 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class createContact extends AppCompatActivity {
     EditText editLastName, editFirstName, editPhone, editMail, editAddress;
     Button buttonAddContact;
+    DatabaseHelper myDb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_contact);
+
+        myDb = DatabaseHelper.getInstance(this);
 
         editLastName = (EditText) findViewById(R.id.textLastName);
         editFirstName = (EditText) findViewById(R.id.textFirstName);
@@ -20,6 +24,7 @@ public class createContact extends AppCompatActivity {
         editMail = (EditText) findViewById(R.id.textMail);
         editAddress = (EditText) findViewById(R.id.textAddress);
         buttonAddContact = (Button) findViewById(R.id.buttonAdd);
+        addContact();
     }
 
     public void addContact() {
@@ -27,7 +32,11 @@ public class createContact extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // je dois passer la database dans cette classe pour pouvoir ajouter des elem dans la table: video 3, 10min30
+                        boolean isInserted = myDb.insertDataContact(editFirstName.getText().toString(), editLastName.getText().toString(), editPhone.getText().toString(), editMail.getText().toString(), editAddress.getText().toString());
+                        if (isInserted = true)
+                            Toast.makeText(createContact.this, "Contact created", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(createContact.this, "Contact not created", Toast.LENGTH_SHORT).show();
                     }
                 }
         );

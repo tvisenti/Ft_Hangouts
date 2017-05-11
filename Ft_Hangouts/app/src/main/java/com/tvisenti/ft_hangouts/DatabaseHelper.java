@@ -11,8 +11,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "contact.db";
+    private static DatabaseHelper sInstance;
 
+    public static final String DATABASE_NAME = "contact.db";
     public static final String CONTACT_TABLE = "contact_table";
     public static final String CONTACT_ID = "ID";
     public static final String CONTACT_LASTNAME = "LASTNAME";
@@ -21,8 +22,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String CONTACT_EMAIL = "EMAIL";
     public static final String CONTACT_ADDRESS = "ADDRESS";
 
-    public DatabaseHelper(Context context) {
+    private DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
+    }
+
+    public static synchronized DatabaseHelper getInstance(Context context) {
+        if (sInstance == null) {
+            sInstance = new DatabaseHelper(context.getApplicationContext());
+        }
+        return sInstance;
     }
 
     @Override
