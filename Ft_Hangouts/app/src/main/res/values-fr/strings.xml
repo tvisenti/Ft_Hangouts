@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Ft_Hangouts</string>
+    <string name="myContactsTitle">Mes contacts</string>
+    <string name="displayContactTitle">Contact:</string>
+    <string name="createContactTitle">Créer un contact</string>
+    <string name="firstNameLabel">Prénom</string>
+    <string name="lastNameLabel">Nom</string>
+    <string name="phoneLabel">Téléphone</string>
+    <string name="mailLabel">Mail</string>
+    <string name="addressLabel">Adresse</string>
+    <string name="addButton">Ajouter</string>
+    <string name="createButton">Créer</string>
+    <string name="deleteButton">Supprimer</string>
+    <string name="editButton">Éditer</string>
+    <string name="saveButton">Sauvegarder</string>
+    <string name="contactCreated">Contact crée</string>
+    <string name="contactNotCreated">Echec création contact</string>
+    <string name="contactUpdated">Contact mis à jour</string>
+    <string name="contactNotUpdated">Echec mise à jour contact</string>
+    <string name="contactIsDeleted">Contact supprimé</string>
+</resources>

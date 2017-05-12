@@ -11,20 +11,20 @@ public class Contact {
     String mail = null;
     String address = null;
 
-    public Contact(String lastName, String firstName, String phone, String mail, String address) {
-        this.lastName = lastName;
+    public Contact(String firstName, String lastName, String phone, String mail, String address) {
         this.firstName = firstName;
+        this.lastName = lastName;
         this.phone = phone;
         this.mail = mail;
         this.address = address;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
     public String getFirstName() {
         return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 
     public String getPhone() {
@@ -39,12 +39,12 @@ public class Contact {
         return address;
     }
 
-    public void setLastName(String str) {
-        this.lastName = str;
-    }
-
     public void setFirstName(String str) {
         this.firstName = str;
+    }
+
+    public void setLastName(String str) {
+        this.lastName = str;
     }
 
     public void setPhone(String str) {
