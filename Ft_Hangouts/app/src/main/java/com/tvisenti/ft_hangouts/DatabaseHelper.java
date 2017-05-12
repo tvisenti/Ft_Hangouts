@@ -2,8 +2,12 @@ package com.tvisenti.ft_hangouts;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by tvisenti on 5/9/17.
@@ -35,7 +39,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + CONTACT_TABLE + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, LASTNAME, FIRSTNAME, PHONE, EMAIL, ADDRESS)");
+        db.execSQL("CREATE TABLE " + CONTACT_TABLE + " (" + CONTACT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                CONTACT_LASTNAME + " TEXT NOT NULL, " + CONTACT_FIRSTNAME + " TEXT NOT NULL, " + CONTACT_PHONE +
+                " TEXT NOT NULL, " + CONTACT_EMAIL + " TEXT NOT NULL, " + CONTACT_ADDRESS + " TEXT NOT NULL)");
     }
 
     @Override
@@ -44,17 +50,63 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertDataContact(String lastname, String firstname, String phone, String email, String address) {
+    public boolean insertDataContact(Contact contact) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(CONTACT_LASTNAME, lastname);
-        contentValues.put(CONTACT_LASTNAME, firstname);
-        contentValues.put(CONTACT_LASTNAME, phone);
-        contentValues.put(CONTACT_LASTNAME, email);
-        contentValues.put(CONTACT_LASTNAME, address);
+        contentValues.put(CONTACT_LASTNAME, contact.getLastName());
+        contentValues.put(CONTACT_FIRSTNAME, contact.getFirstName());
+        contentValues.put(CONTACT_PHONE, contact.getPhone());
+        contentValues.put(CONTACT_EMAIL, contact.getMail());
+        contentValues.put(CONTACT_ADDRESS, contact.getAddress());
         long result = db.insert(CONTACT_TABLE, null, contentValues);
+        db.close();
         if (result == -1)
             return false;
         return true;
+    }
+
+    Contact getContact(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(CONTACT_TABLE, new String[] { CONTACT_ID, CONTACT_LASTNAME,
+                        CONTACT_FIRSTNAME, CONTACT_PHONE, CONTACT_EMAIL, CONTACT_ADDRESS }, CONTACT_ID + "=?",
+                new String[] { String.valueOf(id) }, null, null, null, null);
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        Contact contact = new Contact(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
+        // return contact
+        return contact;
+    }
+
+    public List<Contact> getAllContacts() {
+        List<Contact> contactList = new ArrayList<Contact>();
+        String selectQuery = "SELECT  * FROM " + CONTACT_TABLE;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Contact contact = new Contact(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
+
+                String name = cursor.getString(1)+ "\n" + cursor.getString(2);
+                MainActivity.ArrayofContact.add(name);
+                contactList.add(contact);
+            } while (cursor.moveToNext());
+        }
+
+        // return contact list
+        return contactList;
+    }
+
+    public int getContactsCount() {
+        String countQuery = "SELECT  * FROM " + CONTACT_TABLE;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        cursor.close();
+
+        // return count
+        return cursor.getCount();
     }
 }
