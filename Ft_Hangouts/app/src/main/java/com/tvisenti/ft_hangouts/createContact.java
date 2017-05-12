@@ -32,11 +32,13 @@ public class createContact extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        boolean isInserted = myDb.insertDataContact(editFirstName.getText().toString(), editLastName.getText().toString(), editPhone.getText().toString(), editMail.getText().toString(), editAddress.getText().toString());
+                        Contact contact = new Contact(editFirstName.getText().toString(), editLastName.getText().toString(), editPhone.getText().toString(), editMail.getText().toString(), editAddress.getText().toString());
+                        boolean isInserted = myDb.insertDataContact(contact);
                         if (isInserted = true)
                             Toast.makeText(createContact.this, "Contact created", Toast.LENGTH_SHORT).show();
                         else
                             Toast.makeText(createContact.this, "Contact not created", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 }
         );
