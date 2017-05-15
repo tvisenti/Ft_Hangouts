@@ -86,17 +86,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT  * FROM " + CONTACT_TABLE, null);
+        printTableInLog(db);
 
         if (cursor.moveToFirst()) {
             do {
                 Contact contact = new Contact(cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6));
-
-                String name = cursor.getString(2)+ " " + cursor.getString(3) + "\n" + cursor.getString(4);
-                MainActivity.ArrayofContact.add(name);
+                MainActivity.ArrayofContact.add(contact);
                 contactList.add(contact);
             } while (cursor.moveToNext());
         }
         return contactList;
+    }
+
+    public Cursor getAllRows() {
+        String where = null;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM TABLE", null);
+        if (c != null) {
+            c.moveToFirst();
+        }
+        return c;
     }
 
     public int updateContact(Contact contact, Integer id) {
@@ -115,40 +124,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[] { String.valueOf(id) });
     }
 
-    /**
-     * Convenience method for updating rows in the database.
-     *
-     * @param table the table to update in
-     * @param values a map from column names to new column values. null is a
-     *            valid value that will be translated to NULL.
-     * @param whereClause the optional WHERE clause to apply when updating.
-     *            Passing null will update all rows.
-     * @param whereArgs You may include ?s in the where clause, which
-     *            will be replaced by the values from whereArgs. The values
-     *            will be bound as Strings.
-     * @return the number of rows affected
-     */
-    public int update(String table, ContentValues values, String whereClause, String[] whereArgs) {
-        return updateWithOnConflict(table, values, whereClause, whereArgs, CONFLICT_NONE);
-    }
-
     public void deleteContact(Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(CONTACT_TABLE, CONTACT_ID + " = ?",
                 new String[] { String.valueOf(id) });
-
-        ContentValues values = new ContentValues();
-        values.put(CONTACT_ID, );
-        db.update(CONTACT_TABLE, )
-
-        db.execSQL("UPDATE " + CONTACT_TABLE + " SET " + CONTACT_ID + " = ?" + new String[] { String.valueOf(CONTACT_ID - 1) }));
+        printTableInLog(db);
         db.close();
     }
 
     public int getContactsCount() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT  * FROM " + CONTACT_TABLE, null);
-
         return cursor.getCount();
     }
 

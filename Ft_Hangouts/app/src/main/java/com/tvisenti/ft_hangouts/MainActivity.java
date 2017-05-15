@@ -1,6 +1,7 @@
 package com.tvisenti.ft_hangouts;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,8 +18,8 @@ public class MainActivity extends AppCompatActivity {
     DatabaseHelper myDb;
     ListView mListView;
 
-    public static ArrayList<String> ArrayofContact = new ArrayList<String>();
-    public static ArrayAdapter<String> adapter = null;
+    public static ArrayList<Contact> ArrayofContact = new ArrayList<Contact>();
+    public static ArrayAdapter<Contact> adapter = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,39 +27,42 @@ public class MainActivity extends AppCompatActivity {
 
         setTitle(R.string.myContactsTitle);
 
-        myDb = DatabaseHelper.getInstance(this);
         mListView = (ListView) findViewById(R.id.listView);
 
-        adapter = new ArrayAdapter<String>(MainActivity.this,
+        myDb = DatabaseHelper.getInstance(this);
+
+        adapter = new ArrayAdapter<Contact>(MainActivity.this,
                 android.R.layout.simple_list_item_1, ArrayofContact);
         mListView.setAdapter(adapter);
+
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent myIntent = new Intent(view.getContext(), DisplayContact.class);
-                Integer newPos = position + 1;
-                String log = "New Position: " + newPos;
-                Log.d("New Position: ", log);
-                myIntent.putExtra("idContact", newPos);
-                startActivityForResult(myIntent, newPos);
+                Contact contactId = (Contact) parent.getItemAtPosition(position);
+                myIntent.putExtra("idContact", contactId.getId());
+                startActivityForResult(myIntent, position);
             }
         });
+    }
+
+    @Override
+    public String toString() {
+        return;
     }
 
     @Override
     public void onResume() {
         super.onResume();
         ArrayofContact.clear();
-        myDb.getAllContacts();
         // Print into log
-        List<String> contacts = ArrayofContact;
-        for (String cn : contacts) {
+        List<Contact> contacts = myDb.getAllContacts();
+        for (Contact cn : contacts) {
             String log = "Name: " + cn;
             Log.d("Name: ", log);
         }
         adapter.notifyDataSetChanged();
     }
-
 
     public void createNewContact(View view) {
         Intent intent = new Intent(this, createContact.class);
