@@ -55,7 +55,7 @@ public class DisplayContact extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Contact contact = new Contact(editFirstName.getText().toString(), editLastName.getText().toString(), editPhone.getText().toString(), editMail.getText().toString(), editAddress.getText().toString());
+                        Contact contact = new Contact((myDb.getContactsCount() + 1), editFirstName.getText().toString(), editLastName.getText().toString(), editPhone.getText().toString(), editMail.getText().toString(), editAddress.getText().toString());
                         Integer isInserted = myDb.updateContact(contact, id);
                         if (isInserted == 1)
                             Toast.makeText(DisplayContact.this, R.string.contactUpdated, Toast.LENGTH_SHORT).show();

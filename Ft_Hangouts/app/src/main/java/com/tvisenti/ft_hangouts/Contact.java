@@ -5,18 +5,24 @@ package com.tvisenti.ft_hangouts;
  */
 
 public class Contact {
+    Integer id = null;
     String lastName = null;
     String firstName = null;
     String phone = null;
     String mail = null;
     String address = null;
 
-    public Contact(String firstName, String lastName, String phone, String mail, String address) {
+    public Contact(Integer id, String firstName, String lastName, String phone, String mail, String address) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
         this.mail = mail;
         this.address = address;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getFirstName() {
@@ -37,6 +43,10 @@ public class Contact {
 
     public String getAddress() {
         return address;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public void setFirstName(String str) {

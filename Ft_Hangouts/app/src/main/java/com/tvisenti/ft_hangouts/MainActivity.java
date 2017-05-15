@@ -37,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent myIntent = new Intent(view.getContext(), DisplayContact.class);
                 Integer newPos = position + 1;
-                String log = "Position: " + newPos;
-                Log.d("Position: ", log);
+                String log = "New Position: " + newPos;
+                Log.d("New Position: ", log);
                 myIntent.putExtra("idContact", newPos);
                 startActivityForResult(myIntent, newPos);
             }
@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
             String log = "Name: " + cn;
             Log.d("Name: ", log);
         }
-
         adapter.notifyDataSetChanged();
     }
 
