@@ -37,10 +37,11 @@ public class createContact extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Contact contact = new Contact((myDb.getContactsCount() + 1), editFirstName.getText().toString(), editLastName.getText().toString(), editPhone.getText().toString(), editMail.getText().toString(), editAddress.getText().toString());
-                        boolean isInserted = myDb.insertDataContact(contact);
-                        if (isInserted = true)
+                        Contact contact = new Contact(editFirstName.getText().toString(), editLastName.getText().toString(), editPhone.getText().toString(), editMail.getText().toString(), editAddress.getText().toString());
+                        long isInserted = myDb.insertDataContact(contact);
+                        if (isInserted != -1) {
                             Toast.makeText(createContact.this, R.string.contactCreated, Toast.LENGTH_SHORT).show();
+                        }
                         else
                             Toast.makeText(createContact.this, R.string.contactNotCreated, Toast.LENGTH_SHORT).show();
                         finish();

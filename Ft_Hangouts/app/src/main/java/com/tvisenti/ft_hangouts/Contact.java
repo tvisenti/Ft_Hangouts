@@ -1,19 +1,20 @@
 package com.tvisenti.ft_hangouts;
 
+import android.database.Cursor;
+import android.util.Log;
+
 /**
  * Created by tvisenti on 5/12/17.
  */
 
 public class Contact {
-    Integer id = null;
     String lastName = null;
     String firstName = null;
     String phone = null;
     String mail = null;
     String address = null;
 
-    public Contact(Integer id, String firstName, String lastName, String phone, String mail, String address) {
-        this.id = id;
+    public Contact(String firstName, String lastName, String phone, String mail, String address) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
@@ -21,9 +22,11 @@ public class Contact {
         this.address = address;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getPrimaryKeyContact(DatabaseHelper myDb, Contact contact) {
+        Log.d("getPrimaryKeyContact: ", "JE PASSE ICI");
+        return myDb.getPrimaryKey(contact);
     }
+
 
     public String getFirstName() {
         return firstName;
@@ -43,10 +46,6 @@ public class Contact {
 
     public String getAddress() {
         return address;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public void setFirstName(String str) {

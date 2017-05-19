@@ -21,7 +21,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "contact.db";
     public static final String CONTACT_TABLE = "contact_table";
     public static final String CONTACT_PK = "KEY";
-    public static final String CONTACT_ID = "ID";
     public static final String CONTACT_FIRSTNAME = "FIRSTNAME";
     public static final String CONTACT_LASTNAME = "LASTNAME";
     public static final String CONTACT_PHONE = "PHONE";
@@ -41,8 +40,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + CONTACT_TABLE + " (" + CONTACT_PK + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CONTACT_ID + " INTEGER , " +
-                CONTACT_FIRSTNAME + " TEXT NOT NULL, " + CONTACT_LASTNAME + " TEXT NOT NULL, " + CONTACT_PHONE + " TEXT NOT NULL, " + CONTACT_EMAIL +
+        db.execSQL("CREATE TABLE " + CONTACT_TABLE + " (" + CONTACT_PK + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CONTACT_FIRSTNAME +
+                " TEXT NOT NULL, " + CONTACT_LASTNAME + " TEXT NOT NULL, " + CONTACT_PHONE + " TEXT NOT NULL, " + CONTACT_EMAIL +
                 " TEXT NOT NULL, " + CONTACT_ADDRESS + " TEXT NOT NULL)");
     }
 
@@ -52,32 +51,43 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertDataContact(Contact contact) {
+    public long insertDataContact(Contact contact) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(CONTACT_ID, contact.getId());
         contentValues.put(CONTACT_FIRSTNAME, contact.getFirstName());
         contentValues.put(CONTACT_LASTNAME, contact.getLastName());
         contentValues.put(CONTACT_PHONE, contact.getPhone());
         contentValues.put(CONTACT_EMAIL, contact.getMail());
         contentValues.put(CONTACT_ADDRESS, contact.getAddress());
-        long result = db.insert(CONTACT_TABLE, null, contentValues);
-        db.close();
-        if (result == -1)
-            return false;
-        return true;
+        return db.insert(CONTACT_TABLE, null, contentValues);
+    }
+
+    Integer getPrimaryKey(Contact contact) {
+        Log.d("getPrimaryKey: ", "Je suis la");
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(CONTACT_TABLE, new String[]{ CONTACT_PK }, null, new String[]{CONTACT_FIRSTNAME, CONTACT_LASTNAME, CONTACT_PHONE, CONTACT_EMAIL, CONTACT_ADDRESS}, null, null, null, null);
+        Log.d("getPrimaryKey: ", "Query ok");
+        if(cursor.getCount() < 1) {
+            cursor.close();
+            Log.d("getPrimaryKey: ", "pas trouve");
+            return -1;
+        }
+        Log.d("getPrimaryKey: ", "Avant move");
+        cursor.moveToFirst();
+        Log.d("getPrimaryKey: ", "Avant return");
+        return (int) cursor.getLong(cursor.getColumnIndex(CONTACT_PK));
     }
 
     Contact getContact(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(CONTACT_TABLE, new String[] { CONTACT_PK, CONTACT_ID, CONTACT_FIRSTNAME,
-                        CONTACT_LASTNAME, CONTACT_PHONE, CONTACT_EMAIL, CONTACT_ADDRESS }, CONTACT_ID + "=?",
+        Cursor cursor = db.query(CONTACT_TABLE, new String[] { CONTACT_PK, CONTACT_FIRSTNAME,
+                        CONTACT_LASTNAME, CONTACT_PHONE, CONTACT_EMAIL, CONTACT_ADDRESS }, CONTACT_PK + "=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
 
-        Contact contact = new Contact(cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6));
+        Contact contact = new Contact(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
         return contact;
     }
 
@@ -90,7 +100,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                Contact contact = new Contact(cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6));
+                Contact contact = new Contact(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
                 MainActivity.ArrayofContact.add(contact);
                 contactList.add(contact);
             } while (cursor.moveToNext());
@@ -105,10 +115,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (c != null) {
             c.moveToFirst();
         }
+        db.close();
         return c;
     }
 
-    public int updateContact(Contact contact, Integer id) {
+    public boolean updateContact(Contact contact, Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -119,14 +130,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(CONTACT_ADDRESS, contact.getAddress());
 
         printTableInLog(db);
+        if (db.update(CONTACT_TABLE, values, CONTACT_PK + " =?", new String[] { String.valueOf(id) }) != -1) {
+            db.close();
+            return true;
+        }
+        db.close();
+        return false;
 
-        return db.update(CONTACT_TABLE, values, CONTACT_ID + " = ?",
-                new String[] { String.valueOf(id) });
     }
 
     public void deleteContact(Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(CONTACT_TABLE, CONTACT_ID + " = ?",
+        db.delete(CONTACT_TABLE, CONTACT_PK + " =?",
                 new String[] { String.valueOf(id) });
         printTableInLog(db);
         db.close();
@@ -135,6 +150,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public int getContactsCount() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT  * FROM " + CONTACT_TABLE, null);
+        db.close();
         return cursor.getCount();
     }
 

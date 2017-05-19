@@ -40,15 +40,14 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent myIntent = new Intent(view.getContext(), DisplayContact.class);
                 Contact contactId = (Contact) parent.getItemAtPosition(position);
-                myIntent.putExtra("idContact", contactId.getId());
+                Integer trueId = contactId.getPrimaryKeyContact(myDb, contactId);
+                Log.d("IdContact: ", String.valueOf(id + 1));
+                Log.d("trueId: ", trueId.toString());
+                Log.d("Name: ", contactId.getFirstName());
+                myIntent.putExtra("idContact", trueId);
                 startActivityForResult(myIntent, position);
             }
         });
-    }
-
-    @Override
-    public String toString() {
-        return;
     }
 
     @Override
