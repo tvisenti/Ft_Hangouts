@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -25,6 +34,7 @@
         android:ems="10"
         android:hint="Arthur"
         android:inputType="textPersonName"
+        android:maxLines="1"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -50,6 +60,7 @@
         android:ems="10"
         android:hint="Dent"
         android:inputType="textPersonName"
+        android:maxLines="1"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -75,6 +86,7 @@
         android:ems="10"
         android:hint="0642424242"
         android:inputType="phone"
+        android:maxLines="1"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -100,6 +112,7 @@
         android:ems="10"
         android:hint="adent@student.42.fr"
         android:inputType="textEmailAddress"
+        android:maxLines="1"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -125,6 +138,7 @@
         android:ems="10"
         android:hint="Bételgeuse"
         android:inputType="textPostalAddress"
+        android:maxLines="1"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -158,3 +172,5 @@
         app:layout_constraintHorizontal_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

@@ -18,4 +18,8 @@
     <string name="contactUpdated">Contact mis à jour</string>
     <string name="contactNotUpdated">Echec mise à jour contact</string>
     <string name="contactIsDeleted">Contact supprimé</string>
+    <string name="colorBlue">Bleu</string>
+    <string name="colorYellow">Jaune</string>
+    <string name="colorRed">Rouge</string>
+    <string name="colorGreen">Vert</string>
 </resources>

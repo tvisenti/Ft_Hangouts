@@ -18,4 +18,8 @@
     <string name="contactUpdated">Contact updated</string>
     <string name="contactNotUpdated">Contact not updated</string>
     <string name="contactIsDeleted">Contact is deleted</string>
+    <string name="colorBlue">Blue</string>
+    <string name="colorYellow">Yellow</string>
+    <string name="colorRed">Red</string>
+    <string name="colorGreen">Green</string>
 </resources>

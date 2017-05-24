@@ -8,11 +8,21 @@ import android.util.Log;
  */
 
 public class Contact {
+    Integer id = 0;
     String lastName = null;
     String firstName = null;
     String phone = null;
     String mail = null;
     String address = null;
+
+    public Contact(Integer id, String firstName, String lastName, String phone, String mail, String address) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.mail = mail;
+        this.address = address;
+    }
 
     public Contact(String firstName, String lastName, String phone, String mail, String address) {
         this.firstName = firstName;
@@ -22,11 +32,9 @@ public class Contact {
         this.address = address;
     }
 
-    public Integer getPrimaryKeyContact(DatabaseHelper myDb, Contact contact) {
-        Log.d("getPrimaryKeyContact: ", "JE PASSE ICI");
-        return myDb.getPrimaryKey(contact);
+    public Integer getId() {
+        return id;
     }
-
 
     public String getFirstName() {
         return firstName;
@@ -46,6 +54,10 @@ public class Contact {
 
     public String getAddress() {
         return address;
+    }
+
+    public void setId(Integer newId) {
+        this.id = newId;
     }
 
     public void setFirstName(String str) {

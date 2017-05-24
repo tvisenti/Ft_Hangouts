@@ -21,6 +21,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "contact.db";
     public static final String CONTACT_TABLE = "contact_table";
     public static final String CONTACT_PK = "KEY";
+    public static final String CONTACT_ID = "ID";
     public static final String CONTACT_FIRSTNAME = "FIRSTNAME";
     public static final String CONTACT_LASTNAME = "LASTNAME";
     public static final String CONTACT_PHONE = "PHONE";
@@ -40,9 +41,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + CONTACT_TABLE + " (" + CONTACT_PK + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CONTACT_FIRSTNAME +
-                " TEXT NOT NULL, " + CONTACT_LASTNAME + " TEXT NOT NULL, " + CONTACT_PHONE + " TEXT NOT NULL, " + CONTACT_EMAIL +
-                " TEXT NOT NULL, " + CONTACT_ADDRESS + " TEXT NOT NULL)");
+        db.execSQL("CREATE TABLE " + CONTACT_TABLE + " (" + CONTACT_PK + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CONTACT_ID + " INTEGER NOT NULL, " +
+                CONTACT_FIRSTNAME + " TEXT NOT NULL, " + CONTACT_LASTNAME + " TEXT NOT NULL, " + CONTACT_PHONE + " TEXT NOT NULL, " +
+                CONTACT_EMAIL + " TEXT NOT NULL, " + CONTACT_ADDRESS + " TEXT NOT NULL)");
     }
 
     @Override
@@ -54,6 +55,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public long insertDataContact(Contact contact) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+        contentValues.put(CONTACT_ID, contact.getId());
         contentValues.put(CONTACT_FIRSTNAME, contact.getFirstName());
         contentValues.put(CONTACT_LASTNAME, contact.getLastName());
         contentValues.put(CONTACT_PHONE, contact.getPhone());
@@ -62,32 +64,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.insert(CONTACT_TABLE, null, contentValues);
     }
 
-    Integer getPrimaryKey(Contact contact) {
-        Log.d("getPrimaryKey: ", "Je suis la");
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(CONTACT_TABLE, new String[]{ CONTACT_PK }, null, new String[]{CONTACT_FIRSTNAME, CONTACT_LASTNAME, CONTACT_PHONE, CONTACT_EMAIL, CONTACT_ADDRESS}, null, null, null, null);
-        Log.d("getPrimaryKey: ", "Query ok");
-        if(cursor.getCount() < 1) {
-            cursor.close();
-            Log.d("getPrimaryKey: ", "pas trouve");
-            return -1;
+    Integer getLastRow() {
+        Integer id = 0;
+        SQLiteDatabase db = this.getWritableDatabase();
+        final String MY_QUERY = "SELECT MAX(" + CONTACT_PK + ") FROM " + CONTACT_TABLE;
+        Cursor cur = db.rawQuery(MY_QUERY, null);
+        if (cur != null) {
+            cur.moveToFirst();
+            id = cur.getInt(0);
+            Log.d("PK ID = ", id.toString());
         }
-        Log.d("getPrimaryKey: ", "Avant move");
-        cursor.moveToFirst();
-        Log.d("getPrimaryKey: ", "Avant return");
-        return (int) cursor.getLong(cursor.getColumnIndex(CONTACT_PK));
+        cur.close();
+        return id;
     }
 
     Contact getContact(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(CONTACT_TABLE, new String[] { CONTACT_PK, CONTACT_FIRSTNAME,
+        Cursor cursor = db.query(CONTACT_TABLE, new String[] { CONTACT_PK, CONTACT_ID, CONTACT_FIRSTNAME,
                         CONTACT_LASTNAME, CONTACT_PHONE, CONTACT_EMAIL, CONTACT_ADDRESS }, CONTACT_PK + "=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
 
-        Contact contact = new Contact(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
+        Contact contact = new Contact(cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6));
         return contact;
     }
 
@@ -100,7 +100,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                Contact contact = new Contact(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
+                Contact contact = new Contact(cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6));
                 MainActivity.ArrayofContact.add(contact);
                 contactList.add(contact);
             } while (cursor.moveToNext());

@@ -2,6 +2,7 @@ package com.tvisenti.ft_hangouts;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +22,6 @@ public class createContact extends AppCompatActivity {
         setTitle(R.string.createContactTitle);
 
         myDb = DatabaseHelper.getInstance(this);
-
         editFirstName = (EditText) findViewById(R.id.textFirstName);
         editLastName = (EditText) findViewById(R.id.textLastName);
         editPhone = (EditText) findViewById(R.id.textPhone);
@@ -38,10 +38,11 @@ public class createContact extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Contact contact = new Contact(editFirstName.getText().toString(), editLastName.getText().toString(), editPhone.getText().toString(), editMail.getText().toString(), editAddress.getText().toString());
+                        contact.setId((myDb.getLastRow() + 1));
+                        Log.d("addContact ID: ", contact.getId().toString());
                         long isInserted = myDb.insertDataContact(contact);
-                        if (isInserted != -1) {
+                        if (isInserted != -1)
                             Toast.makeText(createContact.this, R.string.contactCreated, Toast.LENGTH_SHORT).show();
-                        }
                         else
                             Toast.makeText(createContact.this, R.string.contactNotCreated, Toast.LENGTH_SHORT).show();
                         finish();
