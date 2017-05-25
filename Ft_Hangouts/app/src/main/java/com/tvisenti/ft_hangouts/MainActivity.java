@@ -2,10 +2,12 @@ package com.tvisenti.ft_hangouts;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Parcelable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,10 +30,14 @@ public class MainActivity extends AppCompatActivity {
 
     public static ArrayList<Contact> ArrayofContact = new ArrayList<Contact>();
     public static CustomAdapter adapter = null;
+    public static int COLOR_ID = 0xFFCCCCCC;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(COLOR_ID));
 
         setTitle(R.string.myContactsTitle);
 
@@ -64,15 +70,19 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.settingChangeBlue:
+                COLOR_ID = Color.BLUE;
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.BLUE));
                 return true;
             case R.id.settingChangeGreen:
+                COLOR_ID = Color.GREEN;
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.GREEN));
                 return true;
-            case R.id.settingChangeYellow:
-                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.YELLOW));
+            case R.id.settingChangeGray:
+                COLOR_ID = Color.LTGRAY;
+                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.LTGRAY));
                 return true;
             case R.id.settingChangeRed:
+                COLOR_ID = Color.RED;
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
                 return true;
         }

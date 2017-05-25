@@ -3,6 +3,7 @@
     <string name="myContactsTitle">My contacts</string>
     <string name="displayContactTitle">Contact:</string>
     <string name="createContactTitle">Create a contact</string>
+    <string name="messageTitle">Send message</string>
     <string name="firstNameLabel">First Name</string>
     <string name="lastNameLabel">Last Name</string>
     <string name="phoneLabel">Phone</string>
@@ -19,7 +20,8 @@
     <string name="contactNotUpdated">Contact not updated</string>
     <string name="contactIsDeleted">Contact is deleted</string>
     <string name="colorBlue">Blue</string>
-    <string name="colorYellow">Yellow</string>
+    <string name="colorGray">Gray</string>
     <string name="colorRed">Red</string>
     <string name="colorGreen">Green</string>
+    <string name="messageSendButton">Send</string>
 </resources>

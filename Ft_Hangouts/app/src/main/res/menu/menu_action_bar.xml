@@ -7,8 +7,8 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/settingChangeYellow"
-        android:title="@string/colorYellow"
+        android:id="@+id/settingChangeGray"
+        android:title="@string/colorGray"
         app:showAsAction="never" />
 
     <item
