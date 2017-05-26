@@ -9,6 +9,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class createContact extends AppCompatActivity {
 
     EditText editFirstName, editLastName, editPhone, editMail, editAddress;
@@ -40,17 +43,22 @@ public class createContact extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Contact contact = new Contact(editFirstName.getText().toString(), editLastName.getText().toString(), editPhone.getText().toString(), editMail.getText().toString(), editAddress.getText().toString());
-                        contact.setId((myDb.getLastRow() + 1));
-                        Log.d("addContact ID: ", contact.getId().toString());
-                        long isInserted = myDb.insertDataContact(contact);
-                        if (isInserted != -1)
-                            Toast.makeText(createContact.this, R.string.contactCreated, Toast.LENGTH_SHORT).show();
-                        else
-                            Toast.makeText(createContact.this, R.string.contactNotCreated, Toast.LENGTH_SHORT).show();
-                        finish();
+                        checkContext();
                     }
                 }
         );
+    }
+
+    private void checkContext() {
+        if (Utils.checkInfo(editFirstName.getText().toString(), editLastName.getText().toString(), editPhone.getText().toString(), this) == true) {
+            Contact contact = new Contact(editFirstName.getText().toString(), editLastName.getText().toString(), editPhone.getText().toString(), editMail.getText().toString(), editAddress.getText().toString());
+            contact.setId((myDb.getLastRow() + 1));
+            Log.d("addContact ID: ", contact.getId().toString());
+            if (myDb.insertDataContact(contact) != -1)
+                Toast.makeText(createContact.this, R.string.contactCreated, Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(createContact.this, R.string.contactNotCreated, Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 }

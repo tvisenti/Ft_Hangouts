@@ -33,10 +33,6 @@ public class CustomAdapter extends ArrayAdapter<Contact> implements View.OnClick
 
     @Override
     public void onClick(View v) {
-
-        int position=(Integer) v.getTag();
-        Object object= getItem(position);
-        Contact dataModel=(Contact)object;
     }
 
     @Override

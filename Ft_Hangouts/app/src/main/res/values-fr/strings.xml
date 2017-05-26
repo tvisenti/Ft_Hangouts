@@ -3,10 +3,10 @@
     <string name="myContactsTitle">Mes contacts</string>
     <string name="displayContactTitle">Contact:</string>
     <string name="createContactTitle">Créer un contact</string>
-    <string name="messageTitle">Envoyer message</string>
-    <string name="firstNameLabel">Prénom</string>
-    <string name="lastNameLabel">Nom</string>
-    <string name="phoneLabel">Téléphone</string>
+    <string name="messageTitle">Envoyer un message: </string>
+    <string name="firstNameLabel">Prénom *</string>
+    <string name="lastNameLabel">Nom *</string>
+    <string name="phoneLabel">Téléphone *</string>
     <string name="mailLabel">Mail</string>
     <string name="addressLabel">Adresse</string>
     <string name="addButton">Ajouter</string>
@@ -24,4 +24,10 @@
     <string name="colorRed">Rouge</string>
     <string name="colorGreen">Vert</string>
     <string name="messageSendButton">Envoyer</string>
+    <string name="messageButton">Message</string>
+    <string name="noPermission">Aucune permission</string>
+    <string name="smsSend">Sms envoyé</string>
+    <string name="wrongNumber">Numéro de téléphone incorrect</string>
+    <string name="lastNameEmpty">Le champ \'Nom\' est vide</string>
+    <string name="firstNameEmpty">Le champ \'Prénom\' est vide</string>
 </resources>

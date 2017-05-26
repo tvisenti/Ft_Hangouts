@@ -19,6 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper sInstance;
 
     public static final String DATABASE_NAME = "contact.db";
+
     public static final String CONTACT_TABLE = "contact_table";
     public static final String CONTACT_PK = "KEY";
     public static final String CONTACT_ID = "ID";
@@ -28,9 +29,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String CONTACT_EMAIL = "EMAIL";
     public static final String CONTACT_ADDRESS = "ADDRESS";
 
+    public static final String SMS_TABLE = "sms_table";
+    public static final String SMS_PK = "KEY";
+    public static final String SMS_ID_PHONE = "ID_PHONE";
+    public static final String SMS_PHONE = "PHONE";
+    public static final String SMS_MESSAGE = "MESSAGE";
+    public static final String SMS_DATE = "DATE";
+    public static final String SMS_SEND = "SEND";
+
     private DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
+
     public static synchronized DatabaseHelper getInstance(Context context) {
 //        context.deleteDatabase(DATABASE_NAME);
         if (sInstance == null) {
@@ -44,11 +54,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + CONTACT_TABLE + " (" + CONTACT_PK + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CONTACT_ID + " INTEGER NOT NULL, " +
                 CONTACT_FIRSTNAME + " TEXT NOT NULL, " + CONTACT_LASTNAME + " TEXT NOT NULL, " + CONTACT_PHONE + " TEXT NOT NULL, " +
                 CONTACT_EMAIL + " TEXT NOT NULL, " + CONTACT_ADDRESS + " TEXT NOT NULL)");
+
+        db.execSQL("CREATE TABLE " + SMS_TABLE + " (" + SMS_PK + " INTEGER PRIMARY KEY AUTOINCREMENT, " + SMS_ID_PHONE + " INTEGER NOT NULL, " +
+                SMS_PHONE + " TEXT NOT NULL, " + SMS_MESSAGE + " TEXT NOT NULL, " + SMS_DATE + " TEXT NOT NULL, " + SMS_SEND + " INTEGER NOT NULL)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + CONTACT_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + SMS_TABLE);
         onCreate(db);
     }
 
@@ -64,6 +78,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.insert(CONTACT_TABLE, null, contentValues);
     }
 
+    public long insertDataSms(Sms sms) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SMS_ID_PHONE, sms.getId());
+        contentValues.put(SMS_PHONE, sms.getPhone());
+        contentValues.put(SMS_MESSAGE, sms.getMessage());
+        contentValues.put(SMS_DATE, sms.getDate());
+        contentValues.put(SMS_SEND, sms.getSendByMe());
+        return db.insert(SMS_TABLE, null, contentValues);
+    }
+
     Integer getLastRow() {
         Integer id = 0;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -76,6 +101,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         cur.close();
         return id;
+    }
+
+    public ArrayList<Sms> getAllSms(int id) {
+        ArrayList<Sms> smsList = new ArrayList<Sms>();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + SMS_TABLE + " WHERE " + SMS_ID_PHONE + " = " + String.valueOf(id), null);
+        printTableInLogSms(db);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Sms sms = new Sms(cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5));
+                smsList.add(sms);
+            } while (cursor.moveToNext());
+        }
+        return smsList;
     }
 
     Contact getContact(int id) {
@@ -95,8 +136,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Contact> contactList = new ArrayList<Contact>();
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT  * FROM " + CONTACT_TABLE, null);
-        printTableInLog(db);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + CONTACT_TABLE, null);
+        printTableInLogContact(db);
 
         if (cursor.moveToFirst()) {
             do {
@@ -106,17 +147,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return contactList;
-    }
-
-    public Cursor getAllRows() {
-        String where = null;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM TABLE", null);
-        if (c != null) {
-            c.moveToFirst();
-        }
-        db.close();
-        return c;
     }
 
     public boolean updateContact(Contact contact, Integer id) {
@@ -129,7 +159,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(CONTACT_EMAIL, contact.getMail());
         values.put(CONTACT_ADDRESS, contact.getAddress());
 
-        printTableInLog(db);
+        printTableInLogContact(db);
         if (db.update(CONTACT_TABLE, values, CONTACT_PK + " =?", new String[] { String.valueOf(id) }) != -1) {
             db.close();
             return true;
@@ -143,19 +173,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(CONTACT_TABLE, CONTACT_PK + " =?",
                 new String[] { String.valueOf(id) });
-        printTableInLog(db);
+        printTableInLogContact(db);
         db.close();
     }
 
-    public int getContactsCount() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT  * FROM " + CONTACT_TABLE, null);
-        db.close();
-        return cursor.getCount();
-    }
 
-    public void printTableInLog(SQLiteDatabase db) {
+    public void printTableInLogContact(SQLiteDatabase db) {
         String tableName = CONTACT_TABLE;
+        String tableString = String.format("Table %s:\n", tableName);
+        Cursor allRows  = db.rawQuery("SELECT * FROM " + tableName, null);
+        if (allRows.moveToFirst() ){
+            String[] columnNames = allRows.getColumnNames();
+            do {
+                for (String name: columnNames) {
+                    tableString += String.format("%s: %s\n", name,
+                            allRows.getString(allRows.getColumnIndex(name)));
+                }
+                tableString += "\n";
+
+            } while (allRows.moveToNext());
+        }
+        Log.d("DbHelper, ", tableString);
+        return;
+    }
+
+    public void printTableInLogSms(SQLiteDatabase db) {
+        String tableName = SMS_TABLE;
         String tableString = String.format("Table %s:\n", tableName);
         Cursor allRows  = db.rawQuery("SELECT * FROM " + tableName, null);
         if (allRows.moveToFirst() ){

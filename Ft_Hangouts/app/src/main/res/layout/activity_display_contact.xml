@@ -15,15 +15,27 @@
     android:layout_height="match_parent"
     tools:context="com.tvisenti.ft_hangouts.DisplayContact">
 
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/holo_red_dark"
+        android:text="@string/deleteButton"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintTop_toBottomOf="@+id/textAddress"
+        android:layout_marginRight="32dp"
+        app:layout_constraintRight_toRightOf="parent" />
+
     <TextView
         android:id="@+id/firstNameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/firstNameLabel"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp" />
 
     <EditText
         android:id="@+id/textFirstName"
@@ -147,29 +159,25 @@
 
     <Button
         android:id="@+id/saveButton"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
+        android:background="@android:color/holo_blue_light"
         android:text="@string/saveButton"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textAddress" />
+        app:layout_constraintTop_toBottomOf="@+id/textAddress"
+        android:layout_marginLeft="32dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
-    <Button
-        android:id="@+id/deleteButton"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/deleteButton"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/saveButton"
-        app:layout_constraintHorizontal_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/textAddress"
+        app:layout_constraintLeft_toRightOf="@+id/saveButton"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintRight_toLeftOf="@+id/deleteButton"
+        android:layout_marginRight="8dp" />
 
 </android.support.constraint.ConstraintLayout>
 

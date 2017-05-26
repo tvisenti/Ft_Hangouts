@@ -1,26 +1,18 @@
 package com.tvisenti.ft_hangouts;
 
-import android.app.ActionBar;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Parcelable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Contact> ArrayofContact = new ArrayList<Contact>();
     public static CustomAdapter adapter = null;
     public static int COLOR_ID = 0xFFCCCCCC;
+
+    public static boolean onPause = false;
+    public static String pauseDate = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +96,19 @@ public class MainActivity extends AppCompatActivity {
             Log.d("Name: ", log);
         }
         adapter.notifyDataSetChanged();
+
+//        if (onPause == true) {
+//            Toast.makeText(getApplicationContext(), pauseDate, Toast.LENGTH_LONG).show();
+//            onPause = false;
+//        }
     }
+
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        onPause = true;
+//        pauseDate = Utils.dateToString();
+//    }
 
     public void createNewContact(View view) {
         Intent intent = new Intent(this, createContact.class);

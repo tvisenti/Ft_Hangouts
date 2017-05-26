@@ -1,10 +1,11 @@
 package com.tvisenti.ft_hangouts;
 
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,6 +40,27 @@ public class DisplayContact extends AppCompatActivity {
         deleteContact();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.message_action_bar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.messageItem:
+                Intent intent = new Intent(this, SendMessage.class);
+                intent.putExtra("phoneNumber", contact.getPhone());
+                intent.putExtra("idUser", contact.getId());
+                startActivity(intent);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
     private void initText() {
         editFirstName = (EditText) findViewById(R.id.textFirstName);
         editLastName = (EditText) findViewById(R.id.textLastName);
@@ -60,16 +82,21 @@ public class DisplayContact extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Contact contact = new Contact(editFirstName.getText().toString(), editLastName.getText().toString(), editPhone.getText().toString(), editMail.getText().toString(), editAddress.getText().toString());
-                        Boolean isInserted = myDb.updateContact(contact, id);
-                        if (isInserted == true)
-                            Toast.makeText(DisplayContact.this, R.string.contactUpdated, Toast.LENGTH_SHORT).show();
-                        else
-                            Toast.makeText(DisplayContact.this, R.string.contactNotUpdated, Toast.LENGTH_SHORT).show();
-                        finish();
+                        checkContext();
                     }
                 }
         );
+    }
+
+    private void checkContext() {
+        if (Utils.checkInfo(editFirstName.getText().toString(), editLastName.getText().toString(), editPhone.getText().toString(), this) == true) {
+            Contact contact = new Contact(editFirstName.getText().toString(), editLastName.getText().toString(), editPhone.getText().toString(), editMail.getText().toString(), editAddress.getText().toString());
+            if (myDb.updateContact(contact, id) == true)
+                Toast.makeText(DisplayContact.this, R.string.contactUpdated, Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(DisplayContact.this, R.string.contactNotUpdated, Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     public void deleteContact() {

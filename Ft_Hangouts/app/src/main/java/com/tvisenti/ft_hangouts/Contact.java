@@ -1,8 +1,5 @@
 package com.tvisenti.ft_hangouts;
 
-import android.database.Cursor;
-import android.util.Log;
-
 /**
  * Created by tvisenti on 5/12/17.
  */
