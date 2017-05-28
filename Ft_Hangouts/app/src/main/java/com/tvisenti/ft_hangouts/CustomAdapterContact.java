@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * Created by tvisenti on 5/22/17.
  */
 
-public class CustomAdapter extends ArrayAdapter<Contact> implements View.OnClickListener {
+public class CustomAdapterContact extends ArrayAdapter<Contact> implements View.OnClickListener {
     private ArrayList<Contact> arrayContact;
     Context mContext;
 
@@ -24,7 +24,7 @@ public class CustomAdapter extends ArrayAdapter<Contact> implements View.OnClick
         TextView txtPhone;
     }
 
-    public CustomAdapter(ArrayList<Contact> data, Context context) {
+    public CustomAdapterContact(ArrayList<Contact> data, Context context) {
         super(context, R.layout.row_list_layout, data);
         this.arrayContact = data;
         this.mContext=context;

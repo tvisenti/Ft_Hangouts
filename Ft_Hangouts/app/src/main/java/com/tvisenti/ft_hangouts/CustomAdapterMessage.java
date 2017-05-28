@@ -13,8 +13,8 @@ import java.util.ArrayList;
  * Created by tvisenti on 5/26/17.
  */
 
-public class CustomAdapterMessage extends ArrayAdapter<Sms> implements View.OnClickListener {
-    private ArrayList<Sms> arraySms;
+public class CustomAdapterMessage extends ArrayAdapter<Message> implements View.OnClickListener {
+    private ArrayList<Message> arraySms;
     Context mContext;
 
     // View lookup cache
@@ -23,10 +23,10 @@ public class CustomAdapterMessage extends ArrayAdapter<Sms> implements View.OnCl
         TextView txtDate;
     }
 
-    public CustomAdapterMessage(ArrayList<Sms> data, Context context) {
+    public CustomAdapterMessage(ArrayList<Message> data, Context context) {
         super(context, R.layout.row_list_layout, data);
         this.arraySms = data;
-        this.mContext=context;
+        this.mContext = context;
 
     }
 
@@ -36,7 +36,7 @@ public class CustomAdapterMessage extends ArrayAdapter<Sms> implements View.OnCl
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Sms sms = getItem(position);
+        Message sms = getItem(position);
         CustomAdapterMessage.ViewHolder viewHolder;
 
         final View result;
@@ -49,12 +49,12 @@ public class CustomAdapterMessage extends ArrayAdapter<Sms> implements View.OnCl
             viewHolder.txtDate = (TextView) convertView.findViewById(R.id.dateTextView);
             viewHolder.txtMessage = (TextView) convertView.findViewById(R.id.messageTextView);
 
-            result=convertView;
+            result = convertView;
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (CustomAdapterMessage.ViewHolder) convertView.getTag();
-            result=convertView;
+            result = convertView;
         }
 
         viewHolder.txtDate.setText(sms.getDate());

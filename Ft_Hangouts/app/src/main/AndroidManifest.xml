@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".createContact"
+            android:name=".CreateContact"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -30,6 +30,16 @@
         </activity>
         <activity android:name=".DisplayContact" />
         <activity android:name=".SendMessage"></activity>
+
+        <receiver
+            android:name=".SMSReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="999">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

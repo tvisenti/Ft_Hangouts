@@ -21,6 +21,9 @@ public class DisplayContact extends AppCompatActivity {
     EditText editFirstName, editLastName, editPhone, editMail, editAddress;
     Button buttonSaveContact, buttonDeleteContact;
 
+    public static boolean onPause = false;
+    public static String pauseDate = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +44,25 @@ public class DisplayContact extends AppCompatActivity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        MainActivity.onPause = false;
+        SendMessage.onPause = false;
+        if (onPause == true) {
+            Toast.makeText(getApplicationContext(), pauseDate, Toast.LENGTH_LONG).show();
+            onPause = false;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        onPause = true;
+        pauseDate = Utils.dateToString();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.message_action_bar, menu);
         return true;
@@ -52,7 +74,6 @@ public class DisplayContact extends AppCompatActivity {
             case R.id.messageItem:
                 Intent intent = new Intent(this, SendMessage.class);
                 intent.putExtra("phoneNumber", contact.getPhone());
-                intent.putExtra("idUser", contact.getId());
                 startActivity(intent);
                 return true;
         }

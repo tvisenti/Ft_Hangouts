@@ -14,14 +14,18 @@ import android.widget.Toast;
  * Created by tvisenti on 5/26/17.
  */
 
-public class IncomingSms extends BroadcastReceiver {
+public class SMSReceiver extends BroadcastReceiver {
 
+    DatabaseHelper myDb;
+
+    @Override
     public void onReceive(Context context, Intent intent)
     {
         Bundle myBundle = intent.getExtras();
         SmsMessage [] messages = null;
         String strMessage = "";
 
+        myDb = DatabaseHelper.getInstance(context);
         if (myBundle != null)
         {
             Object [] pdus = (Object[]) myBundle.get("pdus");
@@ -35,16 +39,20 @@ public class IncomingSms extends BroadcastReceiver {
                     messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i], format);
                 }
                 else {
-                    messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
+                    messages[i] = SmsMessage.createFromPdu((byte[]) (pdus != null ? pdus[i] : null));
                 }
-                strMessage += "SMS From: " + messages[i].getOriginatingAddress();
-                strMessage += " : ";
-                strMessage += messages[i].getMessageBody();
-                strMessage += "\n";
+//                strMessage += "SMS From: " + messages[i].getOriginatingAddress();
+//                strMessage += " : ";
+//                strMessage += messages[i].getMessageBody();
+//                strMessage += "\n";
+                Message mySms = new Message(messages[i].getOriginatingAddress(), messages[i].getMessageBody(), Utils.dateToString(), 1);
+                myDb.insertDataSms(mySms);
             }
 
             Log.e("SMS", strMessage);
             Toast.makeText(context, strMessage, Toast.LENGTH_SHORT).show();
+
+
         }
     }
 }

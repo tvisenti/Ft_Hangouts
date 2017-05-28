@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     ListView mListView;
 
     public static ArrayList<Contact> ArrayofContact = new ArrayList<Contact>();
-    public static CustomAdapter adapter = null;
+    public static CustomAdapterContact adapter = null;
     public static int COLOR_ID = 0xFFCCCCCC;
 
     public static boolean onPause = false;
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         mListView = (ListView) findViewById(R.id.listView);
 
         myDb = DatabaseHelper.getInstance(this);
-        adapter = new CustomAdapter(ArrayofContact, this);
+        adapter = new CustomAdapterContact(ArrayofContact, this);
         mListView.setAdapter(adapter);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -88,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        CreateContact.onPause = false;
+        DisplayContact.onPause = false;
+
         ArrayofContact.clear();
         // Print into log
         List<Contact> contacts = myDb.getAllContacts();
@@ -97,21 +100,22 @@ public class MainActivity extends AppCompatActivity {
         }
         adapter.notifyDataSetChanged();
 
-//        if (onPause == true) {
-//            Toast.makeText(getApplicationContext(), pauseDate, Toast.LENGTH_LONG).show();
-//            onPause = false;
-//        }
+        if (onPause == true) {
+            Toast.makeText(getApplicationContext(), pauseDate, Toast.LENGTH_LONG).show();
+            onPause = false;
+        }
     }
 
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        onPause = true;
-//        pauseDate = Utils.dateToString();
-//    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        onPause = true;
+        pauseDate = Utils.dateToString();
+    }
+
 
     public void createNewContact(View view) {
-        Intent intent = new Intent(this, createContact.class);
+        Intent intent = new Intent(this, CreateContact.class);
         startActivity(intent);
     }
 }

@@ -31,7 +31,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String SMS_TABLE = "sms_table";
     public static final String SMS_PK = "KEY";
-    public static final String SMS_ID_PHONE = "ID_PHONE";
     public static final String SMS_PHONE = "PHONE";
     public static final String SMS_MESSAGE = "MESSAGE";
     public static final String SMS_DATE = "DATE";
@@ -55,8 +54,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 CONTACT_FIRSTNAME + " TEXT NOT NULL, " + CONTACT_LASTNAME + " TEXT NOT NULL, " + CONTACT_PHONE + " TEXT NOT NULL, " +
                 CONTACT_EMAIL + " TEXT NOT NULL, " + CONTACT_ADDRESS + " TEXT NOT NULL)");
 
-        db.execSQL("CREATE TABLE " + SMS_TABLE + " (" + SMS_PK + " INTEGER PRIMARY KEY AUTOINCREMENT, " + SMS_ID_PHONE + " INTEGER NOT NULL, " +
-                SMS_PHONE + " TEXT NOT NULL, " + SMS_MESSAGE + " TEXT NOT NULL, " + SMS_DATE + " TEXT NOT NULL, " + SMS_SEND + " INTEGER NOT NULL)");
+        db.execSQL("CREATE TABLE " + SMS_TABLE + " (" + SMS_PK + " INTEGER PRIMARY KEY AUTOINCREMENT, " + SMS_PHONE + " TEXT NOT NULL, " +
+                SMS_MESSAGE + " TEXT NOT NULL, " + SMS_DATE + " TEXT NOT NULL, " + SMS_SEND + " INTEGER NOT NULL)");
     }
 
     @Override
@@ -78,10 +77,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.insert(CONTACT_TABLE, null, contentValues);
     }
 
-    public long insertDataSms(Sms sms) {
+    public long insertDataSms(Message sms) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(SMS_ID_PHONE, sms.getId());
         contentValues.put(SMS_PHONE, sms.getPhone());
         contentValues.put(SMS_MESSAGE, sms.getMessage());
         contentValues.put(SMS_DATE, sms.getDate());
@@ -103,16 +101,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public ArrayList<Sms> getAllSms(int id) {
-        ArrayList<Sms> smsList = new ArrayList<Sms>();
+    public ArrayList<Message> getAllSms(String phoneNumber) {
+        ArrayList<Message> smsList = new ArrayList<Message>();
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + SMS_TABLE + " WHERE " + SMS_ID_PHONE + " = " + String.valueOf(id), null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + SMS_TABLE + " WHERE " + SMS_PHONE + " = '" + phoneNumber + "'", null);
+        Log.d("Cursors: ", cursor.getColumnName(1));
         printTableInLogSms(db);
 
         if (cursor.moveToFirst()) {
             do {
-                Sms sms = new Sms(cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5));
+                Message sms = new Message(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getInt(4));
                 smsList.add(sms);
             } while (cursor.moveToNext());
         }

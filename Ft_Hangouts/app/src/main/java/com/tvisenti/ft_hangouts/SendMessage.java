@@ -8,32 +8,30 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class SendMessage extends AppCompatActivity {
 
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
     DatabaseHelper myDb;
     public static CustomAdapterMessage adapter = null;
-    public static ArrayList<Sms> ArrayOfSms = new ArrayList<Sms>();
+    public static ArrayList<Message> ArrayOfSms = new ArrayList<Message>();
 
     ListView listView;
     EditText editMessage;
     Button sendMessageButton;
 
     String phoneNumber = null;
-    Integer idUser = null;
     String messageSend = null;
+
+    public static boolean onPause = false;
+    public static String pauseDate = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +40,6 @@ public class SendMessage extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         phoneNumber = extras.getString("phoneNumber");
-        idUser = extras.getInt("idUser");
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(MainActivity.COLOR_ID));
 
@@ -50,7 +47,7 @@ public class SendMessage extends AppCompatActivity {
         initText();
 
         myDb = DatabaseHelper.getInstance(this);
-        ArrayOfSms = myDb.getAllSms(idUser);
+        ArrayOfSms = myDb.getAllSms(phoneNumber);
         adapter = new CustomAdapterMessage(ArrayOfSms, this);
         listView.setAdapter(adapter);
 
@@ -64,20 +61,40 @@ public class SendMessage extends AppCompatActivity {
         sendMessageButton = (Button) findViewById(R.id.messageSendButton);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        DisplayContact.onPause = false;
+        if (onPause == true) {
+            Toast.makeText(getApplicationContext(), pauseDate, Toast.LENGTH_LONG).show();
+            onPause = false;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        onPause = true;
+        pauseDate = Utils.dateToString();
+    }
+
     public void sendMessage() {
         sendMessageButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        messageSend = editMessage.getText().toString();
-                        Sms mySms = new Sms(idUser, phoneNumber, messageSend, Utils.dateToString(), 1);
-                        myDb.insertDataSms(mySms);
-                        editMessage.setText("");
-                        SmsManager smsManager = SmsManager.getDefault();
-                        smsManager.sendTextMessage(phoneNumber, null, messageSend, null, null);
-                        adapter.add(mySms);
-                        adapter.notifyDataSetChanged();
-                        Toast.makeText(getApplicationContext(), R.string.smsSend, Toast.LENGTH_LONG).show();
+                        if (!editMessage.getText().toString().isEmpty()) {
+                            messageSend = editMessage.getText().toString();
+                            Message mySms = new Message(phoneNumber, messageSend, Utils.dateToString(), 1);
+                            myDb.insertDataSms(mySms);
+                            editMessage.setText("");
+                            SmsManager smsManager = SmsManager.getDefault();
+                            smsManager.sendTextMessage(phoneNumber, null, messageSend, null, null);
+                            adapter.add(mySms);
+                            adapter.notifyDataSetChanged();
+                            Toast.makeText(getApplicationContext(), R.string.smsSend, Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
         );
@@ -104,6 +121,4 @@ public class SendMessage extends AppCompatActivity {
             }
         }
     }
-
-
 }

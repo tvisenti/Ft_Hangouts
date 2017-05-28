@@ -4,30 +4,17 @@ package com.tvisenti.ft_hangouts;
  * Created by tvisenti on 5/26/17.
  */
 
-public class Sms {
-    Integer idPhone = 0;
+public class Message {
     String phone = null;
     String message = null;
     String date = null;
     Integer sendByMe = null;
 
-    public Sms(Integer id, String phone, String message, String date, Integer send) {
-        this.idPhone = id;
+    public Message(String phone, String message, String date, Integer send) {
         this.phone = phone;
         this.message = message;
         this.date = date;
         this.sendByMe = send;
-    }
-
-    public Sms(String phone, String message, String date, Integer send) {
-        this.phone = phone;
-        this.message = message;
-        this.date = date;
-        this.sendByMe = send;
-    }
-
-    public Integer getId() {
-        return idPhone;
     }
 
     public String getPhone() {
@@ -44,10 +31,6 @@ public class Sms {
 
     public Integer getSendByMe() {
         return sendByMe;
-    }
-
-    public void setId(Integer newId) {
-        this.idPhone = newId;
     }
 
     public void setPhone(String str) {
