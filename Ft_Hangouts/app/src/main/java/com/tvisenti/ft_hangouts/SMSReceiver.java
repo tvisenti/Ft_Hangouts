@@ -45,7 +45,7 @@ public class SMSReceiver extends BroadcastReceiver {
             }
 
             strNumber = strNumber.replace("+33", "0");
-            Toast.makeText(context, "Nouveau message from : " + strNumber, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Message: " + strNumber, Toast.LENGTH_SHORT).show();
             Intent broadcastReceiver = new Intent();
             broadcastReceiver.setAction("SMS_RECEIVED_ACTION");
             broadcastReceiver.putExtra("number", strNumber);

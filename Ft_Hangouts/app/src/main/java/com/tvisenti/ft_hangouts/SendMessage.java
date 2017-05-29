@@ -110,11 +110,12 @@ public class SendMessage extends AppCompatActivity {
                     public void onClick(View v) {
                         if (!editMessage.getText().toString().isEmpty()) {
                             messageSend = editMessage.getText().toString();
+                            SmsManager smsManager = SmsManager.getDefault();
+                            smsManager.sendTextMessage(phoneNumber, null, messageSend, null, null);
+                            messageSend = getString(R.string.meMessage) + " " + editMessage.getText().toString();
                             Message mySms = new Message(phoneNumber, messageSend, Utils.dateToString(), 1);
                             myDb.insertDataSms(mySms);
                             editMessage.setText("");
-                            SmsManager smsManager = SmsManager.getDefault();
-                            smsManager.sendTextMessage(phoneNumber, null, messageSend, null, null);
                             adapter.add(mySms);
                             adapter.notifyDataSetChanged();
                             Toast.makeText(getApplicationContext(), R.string.smsSend, Toast.LENGTH_LONG).show();

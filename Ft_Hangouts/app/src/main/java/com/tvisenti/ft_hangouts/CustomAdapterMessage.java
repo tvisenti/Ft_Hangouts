@@ -48,7 +48,6 @@ public class CustomAdapterMessage extends ArrayAdapter<Message> implements View.
             viewHolder.txtDate = (TextView) convertView.findViewById(R.id.dateTextView);
             viewHolder.txtMessage = (TextView) convertView.findViewById(R.id.messageTextView);
 
-
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (CustomAdapterMessage.ViewHolder) convertView.getTag();

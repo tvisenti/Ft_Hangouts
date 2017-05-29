@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Contact> ArrayofContact = new ArrayList<Contact>();
     public static CustomAdapterContact adapter = null;
     public static int COLOR_ID = 0xFFCCCCCC;
-
     public static boolean onPause = false;
     public static String pauseDate = null;
 

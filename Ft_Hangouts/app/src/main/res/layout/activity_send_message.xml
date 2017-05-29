@@ -43,6 +43,7 @@
         android:clickable="false"
         android:stackFromBottom="true"
         android:transcriptMode="normal"
+        android:focusable="false"
         app:layout_constraintBottom_toTopOf="@+id/messageSendButton"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -30,4 +30,5 @@
     <string name="wrongNumber">Numéro de téléphone incorrect</string>
     <string name="lastNameEmpty">Le champ \'Nom\' est vide</string>
     <string name="firstNameEmpty">Le champ \'Prénom\' est vide</string>
+    <string name="meMessage">Moi:</string>
 </resources>
