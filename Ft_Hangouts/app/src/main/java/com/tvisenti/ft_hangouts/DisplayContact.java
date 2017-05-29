@@ -1,6 +1,9 @@
 package com.tvisenti.ft_hangouts;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +20,7 @@ public class DisplayContact extends AppCompatActivity {
     Integer id;
     DatabaseHelper myDb;
     Contact contact = null;
+    IntentFilter intentFilter;
 
     EditText editFirstName, editLastName, editPhone, editMail, editAddress;
     Button buttonSaveContact, buttonDeleteContact;
@@ -24,10 +28,21 @@ public class DisplayContact extends AppCompatActivity {
     public static boolean onPause = false;
     public static String pauseDate = null;
 
+    private BroadcastReceiver intentReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Utils.createContactIfNotExists(myDb, intent, context);
+            onResume();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_contact);
+
+        intentFilter = new IntentFilter();
+        intentFilter.addAction("SMS_RECEIVED_ACTION");
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(MainActivity.COLOR_ID));
 
@@ -53,6 +68,7 @@ public class DisplayContact extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), pauseDate, Toast.LENGTH_LONG).show();
             onPause = false;
         }
+        registerReceiver(intentReceiver, intentFilter);
     }
 
     @Override
@@ -60,6 +76,7 @@ public class DisplayContact extends AppCompatActivity {
         super.onPause();
         onPause = true;
         pauseDate = Utils.dateToString();
+        unregisterReceiver(intentReceiver);
     }
 
     @Override

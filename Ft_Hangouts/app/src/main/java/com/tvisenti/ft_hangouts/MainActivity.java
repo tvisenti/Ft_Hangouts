@@ -1,6 +1,9 @@
 package com.tvisenti.ft_hangouts;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +22,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     DatabaseHelper myDb;
     ListView mListView;
+    IntentFilter intentFilter;
 
     public static ArrayList<Contact> ArrayofContact = new ArrayList<Contact>();
     public static CustomAdapterContact adapter = null;
@@ -26,6 +30,14 @@ public class MainActivity extends AppCompatActivity {
 
     public static boolean onPause = false;
     public static String pauseDate = null;
+
+    private BroadcastReceiver intentReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Utils.createContactIfNotExists(myDb, intent, context);
+            onResume();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(COLOR_ID));
 
         setTitle(R.string.myContactsTitle);
+
+        intentFilter = new IntentFilter();
+        intentFilter.addAction("SMS_RECEIVED_ACTION");
 
         mListView = (ListView) findViewById(R.id.listView);
 
@@ -81,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -98,12 +112,14 @@ public class MainActivity extends AppCompatActivity {
             String log = "Name: " + cn;
             Log.d("Name: ", log);
         }
+
         adapter.notifyDataSetChanged();
 
         if (onPause == true) {
             Toast.makeText(getApplicationContext(), pauseDate, Toast.LENGTH_LONG).show();
             onPause = false;
         }
+        registerReceiver(intentReceiver, intentFilter);
     }
 
     @Override
@@ -111,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         onPause = true;
         pauseDate = Utils.dateToString();
+        unregisterReceiver(intentReceiver);
     }
 
 

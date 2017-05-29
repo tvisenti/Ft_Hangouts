@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
@@ -16,16 +15,16 @@ import android.widget.Toast;
 
 public class SMSReceiver extends BroadcastReceiver {
 
-    DatabaseHelper myDb;
-
     @Override
     public void onReceive(Context context, Intent intent)
     {
         Bundle myBundle = intent.getExtras();
         SmsMessage [] messages = null;
+        String strNumber = "";
         String strMessage = "";
 
-        myDb = DatabaseHelper.getInstance(context);
+        DatabaseHelper myDb = DatabaseHelper.getInstance(context);
+
         if (myBundle != null)
         {
             Object [] pdus = (Object[]) myBundle.get("pdus");
@@ -41,18 +40,17 @@ public class SMSReceiver extends BroadcastReceiver {
                 else {
                     messages[i] = SmsMessage.createFromPdu((byte[]) (pdus != null ? pdus[i] : null));
                 }
-//                strMessage += "SMS From: " + messages[i].getOriginatingAddress();
-//                strMessage += " : ";
-//                strMessage += messages[i].getMessageBody();
-//                strMessage += "\n";
-                Message mySms = new Message(messages[i].getOriginatingAddress(), messages[i].getMessageBody(), Utils.dateToString(), 1);
-                myDb.insertDataSms(mySms);
+                strNumber += messages[i].getOriginatingAddress();
+                strMessage += messages[i].getMessageBody();
             }
 
-            Log.e("SMS", strMessage);
-            Toast.makeText(context, strMessage, Toast.LENGTH_SHORT).show();
-
-
+            strNumber = strNumber.replace("+33", "0");
+            Toast.makeText(context, "Nouveau message from : " + strNumber, Toast.LENGTH_SHORT).show();
+            Intent broadcastReceiver = new Intent();
+            broadcastReceiver.setAction("SMS_RECEIVED_ACTION");
+            broadcastReceiver.putExtra("number", strNumber);
+            broadcastReceiver.putExtra("message", strMessage);
+            context.sendBroadcast(broadcastReceiver);
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.tvisenti.ft_hangouts;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,8 +40,6 @@ public class CustomAdapterMessage extends ArrayAdapter<Message> implements View.
         Message sms = getItem(position);
         CustomAdapterMessage.ViewHolder viewHolder;
 
-        final View result;
-
         if (convertView == null) {
 
             viewHolder = new CustomAdapterMessage.ViewHolder();
@@ -49,12 +48,10 @@ public class CustomAdapterMessage extends ArrayAdapter<Message> implements View.
             viewHolder.txtDate = (TextView) convertView.findViewById(R.id.dateTextView);
             viewHolder.txtMessage = (TextView) convertView.findViewById(R.id.messageTextView);
 
-            result = convertView;
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (CustomAdapterMessage.ViewHolder) convertView.getTag();
-            result = convertView;
         }
 
         viewHolder.txtDate.setText(sms.getDate());

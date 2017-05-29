@@ -77,6 +77,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.insert(CONTACT_TABLE, null, contentValues);
     }
 
+
+
     public long insertDataSms(Message sms) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -90,7 +92,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     Integer getLastRow() {
         Integer id = 0;
         SQLiteDatabase db = this.getWritableDatabase();
-        final String MY_QUERY = "SELECT MAX(" + CONTACT_PK + ") FROM " + CONTACT_TABLE;
+        final String MY_QUERY = "SELECT MAX(ROWID) FROM " + CONTACT_TABLE;
         Cursor cur = db.rawQuery(MY_QUERY, null);
         if (cur != null) {
             cur.moveToFirst();
@@ -98,7 +100,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Log.d("PK ID = ", id.toString());
         }
         cur.close();
-        return id;
+        return id + 1;
     }
 
     public ArrayList<Message> getAllSms(String phoneNumber) {
@@ -148,6 +150,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return contactList;
     }
 
+    public boolean checkIfContactExists(String phoneNumber) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + CONTACT_TABLE + " WHERE " + CONTACT_PHONE + " = '" + phoneNumber + "'", null);
+        if (!cursor.moveToFirst() || cursor.getCount() == 0)
+            return false;
+        return true;
+    }
+
     public boolean updateContact(Contact contact, Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -165,7 +176,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         db.close();
         return false;
+    }
 
+    public void updateContactId(Integer id) {
+        Integer newId = 1;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + CONTACT_TABLE + " WHERE " + CONTACT_ID + " = " + id, null);
+        if (cursor.moveToFirst())
+            newId = cursor.getInt(0);
+        Log.d("Id: ", id.toString());
+        Log.d("Column: ", cursor.getColumnName(0));
+        Log.d("PrevId: ", newId.toString());
+        ContentValues values = new ContentValues();
+        values.put(CONTACT_ID, newId);
+
+        if (db.update(CONTACT_TABLE, values, CONTACT_PK + " =?", new String[] { String.valueOf(newId) }) == -1) {
+            db.update(CONTACT_TABLE, values, CONTACT_PK + " =?", new String[] { String.valueOf(newId + 1) });
+        }
+        db.close();
     }
 
     public void deleteContact(Integer id) {
